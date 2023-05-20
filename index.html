@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="google-site-verification" content="kfHoVesCoRcwsOgNzJUx9B8dVbhpSLimM7SXBo21gOM" />
+  <title>다솜 앨범</title>
+  <style>
+    /* Styles for the gallery */
+    #media {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    video {
+      max-width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    /* Styles for the full screen view */
+    .full-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 999;
+    }
+
+    .full-screen img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Styles for the "Load More" button */
+    button {
+      text-align: center;
+      font-size: 16px;
+      padding: 20px 24px;
+      border-radius: 10px;
+      background-color: yellow;
+    }
+
+    /* Styles for the page title */
+    h1 {
+      font-weight: 900;
+      text-align: center;
+      border: 5px solid pink;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Dasom's Photos and Videos</h1>
+  <ul>
+    <li>사진을 클릭,터치 하면 전체화면으로 변경돼요</li>
+    <li>전체화면에선 아무곳이나 터치하면 목록으로 돌아와요</li>
+    <li>PlayStore 또는 AppStore 에서 Google Drive 설치후 직접 업로드가 가능합니다</li>
+    <li>설치후 <a href="https://drive.google.com/open?id=1-2Enm40iLxAN08WUt5cR9JnieMKjjC7P&authuser=bhwoo48%40gmail.com&usp=drive_fs">이곳</a>을 눌러 업로드해주세요</li>
+  </ul>
+
+  <!-- This div will contain the photos and videos -->
+  <div id="media"></div>
+
+  <!-- Include the Google Drive API client library -->
+  <script src="https://apis.google.com/js/api.js"></script>
+
+  <!-- Load the Google Drive API and call the onApiLoad function when it's ready -->
+  <script>
+    let fullScreen = null;
+
+    function onApiLoad() {
+      gapi.load('client', initClient);
+    }
+
+    function initClient() {
+      gapi.client.init({
+        apiKey: 'AIzaSyC3986kBuE-hPrhcXhhWfxLTA4bDXcjulU',
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+      }).then(() => {
+        // Call the function to display the photos and videos
+        displayMedia();
+      }, error => {
+        console.error(error);
+      });
+    }
+
+    function displayMedia(pageToken) {
+      // Replace YOUR_FOLDER_ID with the ID of your shared folder
+      const folderId = '1-2Enm40iLxAN08WUt5cR9JnieMKjjC7P';
+
+      // Fetch the list of files in the folder and sort them by creation time in descending order
+      gapi.client.drive.files.list({
+        q: `'${folderId}' in parents and (mimeType contains 'image/' or mimeType contains 'video/')`,
+        fields: 'nextPageToken, files(id, name, mimeType, createdTime)',
+        orderBy: 'createdTime desc',
+        pageSize: 15,
+        pageToken: pageToken || null,
+      }).then(response => {
+        const files = response.result.files;
+        const nextPageToken = response.result.nextPageToken;
+
+        if (files && files.length > 0) {
+          // Sort the files by creation time in descending order
+          files.sort((a, b) => (a.createdTime > b.createdTime) ? -1 : 1);
+
+                // Loop through the files and display each photo or video
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const url = `https://drive.google.com/uc?id=${file.id}`;
+
+        if (file.mimeType.startsWith('image/')) {
+          // Display image element
+          const img = document.createElement('img');
+          img.src = url;
+          img.addEventListener('click', () => {
+            // Create a new full-screen element that displays the clicked photo
+            fullScreen = document.createElement('div');
+            fullScreen.classList.add('full-screen');
+
+            const fullImg = document.createElement('img');
+            fullImg.src = url;
+
+            fullScreen.appendChild(fullImg);
+            document.body.appendChild(fullScreen);
+
+            // Add an event listener to the back button on Android phones
+            document.addEventListener('backbutton', onBackButton);
+
+            // Add an event listener to the full-screen element to close it when clicked
+            fullScreen.addEventListener('click', () => {
+              closeFullScreen();
+            });
+          });
+          document.getElementById('media').appendChild(img);
+        } else if (file.mimeType.startsWith('video/')) {
+          // Display video element
+          const video = document.createElement('video');
+          video.src = url;
+          video.controls = true;
+          document.getElementById('media').appendChild(video);
+        }
+      }
+
+      // If there are more files to load, display a "Load More" button
+      if (nextPageToken) {
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.textContent = '사진과 영상 더 보기';
+        loadMoreBtn.addEventListener('click', () => {
+          loadMoreBtn.remove();
+          displayMedia(nextPageToken);
+        });
+        document.getElementById('media').appendChild(loadMoreBtn);
+      }
+      else {
+        console.log('No more files to load.');
+      }
+    } else {
+      console.log('No files found.');
+    }
+  }, error => {
+    console.error(error);
+  });
+}
+
+// Function to handle the back button on Android phones when the photo is displayed in full screen
+function onBackButton() {
+  closeFullScreen();
+}
+
+// Function to close the full-screen view and remove the event listener from the back button
+function closeFullScreen() {
+  if (fullScreen) {
+    fullScreen.remove();
+    fullScreen = null;
+    document.removeEventListener('backbutton', onBackButton);
+  }
+}
+
+</script>
+<!-- Call the onApiLoad function when the page is loaded -->
+<script async defer src="https://apis.google.com/js/api.js" onload="onApiLoad()"></script>
+</body>
+</html>
