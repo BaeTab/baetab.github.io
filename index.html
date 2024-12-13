@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페인트 계산기 - 필요한 페인트 양 계산하기</title>
+    <meta name="description" content="페인트 계산기로 필요한 페인트 양을 쉽게 계산하세요.">
+    <meta name="keywords" content="페인트, 계산기, 면적, 벽">
+    <meta name="author" content="당신의 이름">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+    <script>
+        function calculatePaint() {
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+                alert("올바른 값을 입력하세요.");
+                return;
+            }
+
+            const area = width * height; // 면적 계산
+            const paintNeeded = area / 10; // 1리터당 10제곱미터 커버한다고 가정
+
+            document.getElementById('result').innerText = `필요한 페인트 양: ${paintNeeded.toFixed(2)} 리터`;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>페인트 계산기</h1>
+        <label for="width">벽의 너비 (미터):</label>
+        <input type="number" id="width" required>
+        <label for="height">벽의 높이 (미터):</label>
+        <input type="number" id="height" required>
+        <button onclick="calculatePaint()">계산하기</button>
+        <p id="result"></p>
+    </div>
+</body>
+</html>
