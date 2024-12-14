@@ -5,56 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>페인트 계산기 - 필요한 페인트 양 계산하기</title>
     <meta name="description" content="페인트 계산기로 필요한 페인트 양을 쉽게 계산하세요.">
-    <meta name="keywords" content="페인트, 계산기, 면적, 벽">
-    <meta name="author" content="당신의 이름">
+    <meta name="keywords" content="페인트, 계산기, 면적, 벽, DIY, 페인트 작업, 비용 계산">
+    <meta name="author" content="BaeTab">
     <meta name="google-adsense-account" content="ca-pub-4519979572879520">
+    <meta name="robots" content="index, follow"> <!-- 검색 엔진에 페이지 인덱싱 지시 -->
+    <link rel="canonical" href="https://baetab.github.io/index.html"> <!-- 정규 URL 설정 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- 아이콘 추가 -->
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #e9ecef;
             margin: 0;
             padding: 20px;
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #343a40;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         .container {
             max-width: 400px;
             margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .container:hover {
+            transform: scale(1.02);
         }
         label {
             display: block;
-            margin: 10px 0 5px;
+            margin: 15px 0 5px;
+            font-weight: bold;
         }
         input {
-            width: 100%;
-            padding: 10px;
+            width: 95%;
+            padding: 12px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #28a745;
+            outline: none;
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            padding: 12px;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
         #result {
             text-align: center;
-            margin-top: 15px;
-            font-size: 1.2em;
-            color: #333;
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #343a40;
+            font-weight: bold;
         }
     </style>
     <script>
@@ -75,16 +94,23 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <h1>페인트 계산기</h1>
-        <label for="width">벽의 너비 (미터):</label>
-        <input type="number" id="width" required>
-        <label for="height">벽의 높이 (미터):</label>
-        <input type="number" id="height" required>
-        <button onclick="calculatePaint()">계산하기</button>
-        <p id="result"></p>
-    </div>
-</body>
+    <header>
+        <h1>페인트 계산기 <i class="fas fa-paint-roller"></i></h1> <!-- 아이콘 추가 -->
+    </header>
+    <main>
+        <div class="container">
+            <label for="width">벽의 너비 (미터):</label>
+            <input type="number" id="width" required maxlength="5">
+            <label for="height">벽의 높이 (미터):</label>
+            <input type="number" id="height" required maxlength="5">
+            <button onclick="calculatePaint()">계산하기</button>
+            <p id="result" aria-live="polite"></p> <!-- 접근성 향상 -->
+        </div>
+    </main>
+    <footer>
+        <p style="text-align: center;">© 2024 BaeTab Allright reserved.</p> <!-- 텍스트 정렬 추가 -->
+    </footer>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4519979572879520"
      crossorigin="anonymous"></script>
+</body>
 </html>
